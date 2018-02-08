@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"lwebco.de/comparisonapis/pkg/utils/uuid"
+	"github.com/satori/go.uuid"
 )
 
 func unmarshalResponse(res *http.Response, obj interface{}) error {
@@ -18,5 +18,6 @@ func unmarshalResponse(res *http.Response, obj interface{}) error {
 }
 
 func NewUUIDString() string {
-	return uuid.New().String()
+	uu, _ := uuid.NewV4()
+	return uu.String()
 }
