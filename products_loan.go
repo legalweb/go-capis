@@ -13,56 +13,54 @@ import (
 
 type (
 	NewLoanRequest struct {
-		ID                       string                 `json:"id"`
-		Issuer                   string                 `json:"issuer"`
-		Name                     string                 `json:"name"`
-		Description              string                 `json:"description"`
-		URLApply                 string                 `json:"url_apply"`
-		URLLogo                  string                 `json:"url_logo"`
-		HighlightedPoints        []string               `json:"highlighted_points"`
-		TechnicalPoints          []string               `json:"technical_points"`
-		Type                     string                 `json:"type"`
-		OfferInterestRate        RatePeriod             `json:"offer_interest_rate"`
-		OfferInterestRateType    string                 `json:"offer_interest_rate_type"`
-		StandardInterestRate     Rate                   `json:"standard_interest_rate"`
-		StandardInterestRateType string                 `json:"standard_interest_rate_type"`
-		LoanToValue              Rate                   `json:"loan_to_value"`
-		Fee                      Money                  `json:"fee"`
-		MinimumLoan              Money                  `json:"minimum_loan"`
-		MaximumLoan              Money                  `json:"maximum_loan"`
-		EarlyRedemptionCharge    Money                  `json:"early_redemption_charge"`
-		IsConsumer               bool                   `json:"is_consumer"`
-		IsCommercial             bool                   `json:"is_commercial"`
-		BrokerOnly               bool                   `json:"broker_only"`
-		Active                   bool                   `json:"active"`
-		Meta                     map[string]interface{} `json:"metadata"`
+		ID                string                 `json:"id"`
+		Issuer            string                 `json:"issuer"`
+		Name              string                 `json:"name"`
+		Description       string                 `json:"description"`
+		URLApply          string                 `json:"url_apply"`
+		URLLogo           string                 `json:"url_logo"`
+		HighlightedPoints []string               `json:"highlighted_points"`
+		TechnicalPoints   []string               `json:"technical_points"`
+		InterestRate      Rate                   `json:"interest_rate"`
+		MonthlyFee        Money                  `json:"monthly_fee"`
+		SetupFee          Money                  `json:"setup_fee"`
+		MinimumLoan       Money                  `json:"minimum_loan"`
+		MaximumLoan       Money                  `json:"maximum_loan"`
+		MinimumTerm       Months                 `json:"minimum_term"`
+		MaximumTerm       Months                 `json:"maximum_term"`
+		GuarantorAllowed  bool                   `json:"guarantor_allowed"`
+		GuarantorCriteria []string               `json:"guarantor_criteria"`
+		IsConsumer        bool                   `json:"is_consumer"`
+		IsCommercial      bool                   `json:"is_commercial"`
+		BrokerOnly        bool                   `json:"broker_only"`
+		Active            bool                   `json:"active"`
+		Meta              map[string]interface{} `json:"metadata"`
 	}
 
 	Loan struct {
-		ID                       string                 `json:"id"`
-		Issuer                   string                 `json:"issuer"`
-		Name                     string                 `json:"name"`
-		Description              string                 `json:"description"`
-		URLApply                 string                 `json:"url_apply"`
-		URLLogo                  string                 `json:"url_logo"`
-		HighlightedPoints        []string               `json:"highlighted_points"`
-		TechnicalPoints          []string               `json:"technical_points"`
-		Type                     string                 `json:"type"`
-		OfferInterestRate        RatePeriod             `json:"offer_interest_rate"`
-		OfferInterestRateType    string                 `json:"offer_interest_rate_type"`
-		StandardInterestRate     Rate                   `json:"standard_interest_rate"`
-		StandardInterestRateType string                 `json:"standard_interest_rate_type"`
-		LoanToValue              Rate                   `json:"loan_to_value"`
-		Fee                      Money                  `json:"fee"`
-		MinimumLoan              Money                  `json:"minimum_loan"`
-		MaximumLoan              Money                  `json:"maximum_loan"`
-		EarlyRedemptionCharge    Money                  `json:"early_redemption_charge"`
-		IsConsumer               bool                   `json:"is_consumer"`
-		IsCommercial             bool                   `json:"is_commercial"`
-		BrokerOnly               bool                   `json:"broker_only"`
-		Active                   bool                   `json:"active"`
-		Meta                     map[string]interface{} `json:"metadata"`
-		Created                  time.Time              `json:"created"`
+		ID                string                 `json:"id"`
+		Issuer            string                 `json:"issuer"`
+		Name              string                 `json:"name"`
+		Description       string                 `json:"description"`
+		URLApply          string                 `json:"url_apply"`
+		URLLogo           string                 `json:"url_logo"`
+		HighlightedPoints []string               `json:"highlighted_points"`
+		TechnicalPoints   []string               `json:"technical_points"`
+		InterestRate      Rate                   `json:"interest_rate"`
+		MonthlyFee        Money                  `json:"monthly_fee"`
+		SetupFee          Money                  `json:"setup_fee"`
+		MinimumLoan       Money                  `json:"minimum_loan"`
+		MaximumLoan       Money                  `json:"maximum_loan"`
+		MinimumTerm       Months                 `json:"minimum_term"`
+		MaximumTerm       Months                 `json:"maximum_term"`
+		GuarantorAllowed  bool                   `json:"guarantor_allowed"`
+		GuarantorCriteria []string               `json:"guarantor_criteria"`
+		IsConsumer        bool                   `json:"is_consumer"`
+		IsCommercial      bool                   `json:"is_commercial"`
+		BrokerOnly        bool                   `json:"broker_only"`
+		Active            bool                   `json:"active"`
+		Meta              map[string]interface{} `json:"metadata"`
+		Created           time.Time              `json:"created"`
 	}
 
 	ListLoansResponse struct {
@@ -87,13 +85,13 @@ func (s *ProductsService) FindLoan(ctx context.Context, id string) (*Loan, error
 	return prd, unmarshalResponse(res, prd)
 }
 
-func (s *ProductsService) UpdateLoan(ctx context.Context, mortgage *Loan) error {
-	if len(mortgage.ID) == 0 {
-		return errors.New("can only update an existing mortgage")
+func (s *ProductsService) UpdateLoan(ctx context.Context, loan *Loan) error {
+	if len(loan.ID) == 0 {
+		return errors.New("can only update an existing loan")
 	}
 
-	rb, _ := json.Marshal(mortgage)
-	req, err := s.c.newRequest("PUT", fmt.Sprintf("/v1/loans/%s", mortgage.ID), bytes.NewReader(rb))
+	rb, _ := json.Marshal(loan)
+	req, err := s.c.newRequest("PUT", fmt.Sprintf("/v1/loans/%s", loan.ID), bytes.NewReader(rb))
 
 	if err != nil {
 		return err
