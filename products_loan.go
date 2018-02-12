@@ -22,8 +22,8 @@ type (
 		HighlightedPoints []string               `json:"highlighted_points"`
 		TechnicalPoints   []string               `json:"technical_points"`
 		InterestRate      Rate                   `json:"interest_rate"`
-		MonthlyFee        Money                  `json:"monthly_fee"`
-		SetupFee          Money                  `json:"setup_fee"`
+		MonthlyFee        Fee                    `json:"monthly_fee"`
+		SetupFee          Fee                    `json:"setup_fee"`
 		MinimumLoan       Money                  `json:"minimum_loan"`
 		MaximumLoan       Money                  `json:"maximum_loan"`
 		MinimumTerm       Months                 `json:"minimum_term"`
@@ -47,8 +47,8 @@ type (
 		HighlightedPoints []string               `json:"highlighted_points"`
 		TechnicalPoints   []string               `json:"technical_points"`
 		InterestRate      Rate                   `json:"interest_rate"`
-		MonthlyFee        Money                  `json:"monthly_fee"`
-		SetupFee          Money                  `json:"setup_fee"`
+		MonthlyFee        Fee                    `json:"monthly_fee"`
+		SetupFee          Fee                    `json:"setup_fee"`
 		MinimumLoan       Money                  `json:"minimum_loan"`
 		MaximumLoan       Money                  `json:"maximum_loan"`
 		MinimumTerm       Months                 `json:"minimum_term"`
