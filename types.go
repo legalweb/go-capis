@@ -27,6 +27,12 @@ type (
 		Amount      int64  `json:"amount"`
 		Description string `json:"description"`
 	}
+
+	Fee struct {
+		Fixed       *Money  `json:"fixed,omitempty"`
+		Variable    float64 `json:"variable,omitempty"`
+		Description string  `json:"description"`
+	}
 )
 
 func NewRate(v float64, d string) Rate {
@@ -59,5 +65,19 @@ func NewMoney(c string, a int64, d string) Money {
 		Currency:    c,
 		Amount:      a,
 		Description: d,
+	}
+}
+
+func NewFixedFee(money *Money, description string) Fee {
+	return Fee{
+		Fixed:       money,
+		Description: description,
+	}
+}
+
+func NewVariableFee(pcent float64, description string) Fee {
+	return Fee{
+		Variable:    pcent,
+		Description: description,
 	}
 }
