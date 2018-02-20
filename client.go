@@ -29,6 +29,9 @@ func (c *Client) newRequest(method, path string, body io.Reader) (*http.Request,
 		return nil, err
 	}
 
-	req.Header.Add("Authorization", "bearer "+c.token)
+	if c.token != "" {
+		req.Header.Add("Authorization", "bearer "+c.token)
+	}
+
 	return req, nil
 }
