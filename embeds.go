@@ -2,7 +2,6 @@ package capis
 
 import (
 	"context"
-	"fmt"
 
 	querystring "github.com/google/go-querystring/query"
 )
@@ -90,7 +89,7 @@ type (
 )
 
 // ListEmbeds ...
-func (c *Client) ListEmbeds(ctx context.Context, filters EmbedFilters) (*ListEmbedsResponse, error) {
+func (c *Client) ListEmbeds(ctx context.Context, filters *EmbedFilters) (*ListEmbedsResponse, error) {
 	obj := &ListEmbedsResponse{}
 	qs, _ := querystring.Values(filters)
 
@@ -132,11 +131,4 @@ func (c *Client) FindEmbed(ctx context.Context, id string) (*Embed, error) {
 	}
 
 	return obj, unmarshalResponse(res, obj)
-}
-
-// WhereMetaKeyEquals will append a metadata filter, this only supports
-// equal comparison and must be strings.
-func (f *EmbedFilters) WhereMetaKeyEquals(k, v string) *EmbedFilters {
-	f.Metadata = append(f.Metadata, fmt.Sprintf("%s:%s", k, v))
-	return f
 }
