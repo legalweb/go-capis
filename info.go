@@ -16,8 +16,13 @@ type (
 				Label string `json:"label"`
 			} `json:"columns"`
 			Filters []struct {
-				Value string `json:"value"`
-				Label string `json:"label"`
+				Value   string `json:"value"`
+				Label   string `json:"label"`
+				Mutli   bool   `json:"multi"`
+				Choices []struct {
+					Value string `json:"value"`
+					Label string `json:"label"`
+				} `json:"choices"`
 			} `json:"filters"`
 			AvailableGroups []string `json:"available_groups"`
 		} `json:"data"`
