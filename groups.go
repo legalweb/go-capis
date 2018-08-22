@@ -9,24 +9,29 @@ import (
 )
 
 type (
+	// ListGroupsResponse ...
 	ListGroupsResponse struct {
 		Data []*Group `json:"data"`
 	}
 
+	// FindGroupResponse ...
 	FindGroupResponse struct {
 		Data *Group `json:"data"`
 	}
 
+	// GroupFilters ...
 	GroupFilters struct {
 		Type string `json:"type"`
 	}
 
+	// Group ...
 	Group struct {
 		ID   string `json:"id"`
 		Type string `json:"type"`
 	}
 )
 
+// ListGroups ...
 func (c *Client) ListGroups(ctx context.Context, filters *GroupFilters) (*ListGroupsResponse, error) {
 	obj := &ListGroupsResponse{}
 	qs, _ := querystring.Values(filters)
@@ -49,6 +54,7 @@ func (c *Client) ListGroups(ctx context.Context, filters *GroupFilters) (*ListGr
 	return obj, unmarshalResponse(res, obj)
 }
 
+// FindGroup ...
 func (c *Client) FindGroup(ctx context.Context, name string) (*FindGroupResponse, error) {
 	obj := &FindGroupResponse{}
 
@@ -70,11 +76,13 @@ func (c *Client) FindGroup(ctx context.Context, name string) (*FindGroupResponse
 	return obj, unmarshalResponse(res, obj)
 }
 
+// NewGroupRequest ...
 type NewGroupRequest struct {
 	ID   string `json:"id"`
 	Type string `json:"type"`
 }
 
+// NewGroup ...
 func (c *Client) NewGroup(ctx context.Context, opts *NewGroupRequest) error {
 	b, err := json.Marshal(opts)
 	if err != nil {
@@ -99,11 +107,13 @@ func (c *Client) NewGroup(ctx context.Context, opts *NewGroupRequest) error {
 	return nil
 }
 
+// SetGroupProductsRequest ...
 type SetGroupProductsRequest struct {
 	GroupID  string   `json:"-"`
 	Products []string `json:"product_ids"`
 }
 
+// SetGroupProducts ...
 func (c *Client) SetGroupProducts(ctx context.Context, opts *SetGroupProductsRequest) error {
 	b, err := json.Marshal(opts)
 	if err != nil {
@@ -128,6 +138,7 @@ func (c *Client) SetGroupProducts(ctx context.Context, opts *SetGroupProductsReq
 	return nil
 }
 
+// IsType ...
 func (g *Group) IsType(t ProductType) bool {
 	return ProductType(g.Type) == t
 }

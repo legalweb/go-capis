@@ -1,0 +1,142 @@
+package capis
+
+import (
+	"context"
+	"fmt"
+
+	querystring "github.com/google/go-querystring/query"
+)
+
+type (
+	// EmbedCreateRequest ...
+	EmbedCreateRequest struct {
+		ID        string         `json:"id"`
+		GroupID   string         `json:"group_id"`
+		Filters   []string       `json:"filters"`
+		Columns   []string       `json:"columns"`
+		Theme     EmbedTheme     `json:"theme"`
+		Overrides EmbedOverrides `json:"overrides"`
+	}
+
+	// ListEmbedsResponse ...
+	ListEmbedsResponse struct {
+		Data []*Embed `json:"data"`
+	}
+
+	// Embed ...
+	Embed struct {
+		ID         string               `json:"id"`
+		Introducer string               `json:"introducer"`
+		Theme      EmbedTheme           `json:"theme"`
+		Overrides  EmbedOverrides       `json:"overrides"`
+		Filters    []string             `json:"filters"`
+		Columns    []string             `json:"columns"`
+		Source     EmbedProductSelector `json:"source"`
+	}
+
+	// EmbedTheme ...
+	EmbedTheme struct {
+		MainColor                         string `json:"mainColor"`
+		MainFontFamily                    string `json:"mainFontFamily"`
+		MainNormalFontWeight              string `json:"mainNormalFontWeight"`
+		MainFontSize                      string `json:"mainFontSize"`
+		MainBoldFontWeight                string `json:"mainBoldFontWeight"`
+		ProductMaskBackground             string `json:"productMaskBackground"`
+		ProductEmptyBackground            string `json:"productEmptyBackground"`
+		ProductOutlineBackground          string `json:"productOutlineBackground"`
+		ProductOutlineColor               string `json:"productOutlineColor"`
+		ProductColBackground              string `json:"productColBackground"`
+		ProductHighlightOutlineBackground string `json:"productHighlightOutlineBackground"`
+		ProductHighlightOutlineColor      string `json:"productHighlightOutlineColor"`
+		ApplyButtonBackground             string `json:"applyButtonBackground"`
+		ApplyButtonColor                  string `json:"applyButtonColor"`
+		InfoButtonBackground              string `json:"infoButtonBackground"`
+		InfoButtonColor                   string `json:"infoButtonColor"`
+		InfoCheckColor                    string `json:"infoCheckColor"`
+		FilterHeaderBorder                string `json:"filterHeaderBorder"`
+		FilterHeaderColor                 string `json:"filterHeaderColor"`
+		FilterChosenBackground            string `json:"filterChosenBackground"`
+		FilterChosenColor                 string `json:"filterChosenColor"`
+	}
+
+	// EmbedOverrides ...
+	EmbedOverrides struct {
+		ButtonText string                 `json:"button_text"`
+		ApplyURL   string                 `json:"apply_url"`
+		Meta       map[string]interface{} `json:"metadata"`
+	}
+
+	// EmbedProductSelector ...
+	EmbedProductSelector struct {
+		GroupID   string   `json:"group_id,omitempty"`
+		ProductID []string `json:"product_ids,omitempty"`
+	}
+
+	// DetailedEmbed ...
+	DetailedEmbed struct {
+		Embed Embed `json:"embed"`
+
+		Details struct {
+			ProductCount int64  `json:"product_count"`
+			ProductType  string `json:"product_type"`
+			Snippet      string `json:"snippet"`
+		}
+	}
+
+	// EmbedFilters ...
+	EmbedFilters struct {
+		Metadata []string `json:"metadata"`
+	}
+)
+
+// ListEmbeds ...
+func (c *Client) ListEmbeds(ctx context.Context, filters EmbedFilters) (*ListEmbedsResponse, error) {
+	obj := &ListEmbedsResponse{}
+	qs, _ := querystring.Values(filters)
+
+	req, err := c.newRequest("GET", "/v1/embeds?"+qs.Encode(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := c.Do(req.WithContext(ctx))
+	if err != nil {
+		return nil, ErrUnreachable
+	}
+	defer res.Body.Close()
+
+	if err := statusCodeToError(res.StatusCode); err != nil {
+		return nil, err
+	}
+
+	return obj, unmarshalResponse(res, obj)
+}
+
+// FindEmbed ...
+func (c *Client) FindEmbed(ctx context.Context, id string) (*Embed, error) {
+	obj := &Embed{}
+
+	req, err := c.newRequest("GET", "/v1/embeds/"+id, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := c.Do(req.WithContext(ctx))
+	if err != nil {
+		return nil, ErrUnreachable
+	}
+	defer res.Body.Close()
+
+	if err := statusCodeToError(res.StatusCode); err != nil {
+		return nil, err
+	}
+
+	return obj, unmarshalResponse(res, obj)
+}
+
+// WhereMetaKeyEquals will append a metadata filter, this only supports
+// equal comparison and must be strings.
+func (f *EmbedFilters) WhereMetaKeyEquals(k, v string) *EmbedFilters {
+	f.Metadata = append(f.Metadata, fmt.Sprintf("%s:%s", k, v))
+	return f
+}

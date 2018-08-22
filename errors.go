@@ -7,15 +7,19 @@ import (
 )
 
 type (
+	// ErrUnknown is returned when we don't know what the error is.
 	ErrUnknown struct {
 		statusCode int
 	}
 )
 
 var (
+	// ErrUnauthorized is returned when the token is invalid.
 	ErrUnauthorized = errors.New("unauthorized access, is the token valid")
-	ErrNotFound     = errors.New("not found")
-	ErrUnreachable  = errors.New("unreachable")
+	// ErrNotFound is returned when the resource is not found.
+	ErrNotFound = errors.New("not found")
+	// ErrUnreachable is returned when we cannot connect to the capis server.
+	ErrUnreachable = errors.New("unreachable")
 )
 
 func statusCodeToError(sc int) error {

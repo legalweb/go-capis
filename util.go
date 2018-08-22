@@ -17,6 +17,9 @@ func unmarshalResponse(res *http.Response, obj interface{}) error {
 	return json.Unmarshal(rb, obj)
 }
 
+// NewUUIDString is a utility function to get a UUID without worry about
+// errors being returned from the commonly use library for generating
+// UUIDs in Golang.
 func NewUUIDString() string {
 	uu, _ := uuid.NewV4()
 	return uu.String()
