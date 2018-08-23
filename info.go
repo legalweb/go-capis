@@ -52,5 +52,5 @@ func (c *Client) GetBuildConfiguration(ctx context.Context) (*BuildConfiguration
 	}
 
 	var obj *BuildConfigurationResponse
-	return obj, unmarshalResponse(res, obj)
+	return obj, unmarshalResponse(res, &obj)
 }
