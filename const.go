@@ -8,6 +8,8 @@ const (
 	TypeBankAccount ProductType = "bankaccount"
 	// TypeCreditCard product type.
 	TypeCreditCard ProductType = "creditcard"
+	// TypeLoan product type.
+	TypeLoan ProductType = "loan"
 	// TypeMortgage product type.
 	TypeMortgage ProductType = "mortgage"
 )
