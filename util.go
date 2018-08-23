@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/satori/go.uuid"
+	"github.com/gofrs/uuid"
 )
 
 func unmarshalResponse(res *http.Response, obj interface{}) error {
@@ -21,6 +21,9 @@ func unmarshalResponse(res *http.Response, obj interface{}) error {
 // errors being returned from the commonly use library for generating
 // UUIDs in Golang.
 func NewUUIDString() string {
-	uu, _ := uuid.NewV4()
+	uu, err := uuid.NewV4()
+	if err != nil {
+		panic(err)
+	}
 	return uu.String()
 }
