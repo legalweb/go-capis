@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/pkg/errors"
+	"go.opencensus.io/trace"
 )
 
 type (
@@ -32,6 +33,9 @@ type (
 // GetBuildConfiguration will query capis for the available options to
 // build embeds with.
 func (c *Client) GetBuildConfiguration(ctx context.Context) (*BuildConfigurationResponse, error) {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/Client.GetBuildConfigurations")
+	defer span.End()
+
 	req, err := c.newRequest("GET", "/v1/info/build-configurations", nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to create request")

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	querystring "github.com/google/go-querystring/query"
+	"go.opencensus.io/trace"
 )
 
 type (
@@ -71,6 +72,9 @@ type (
 )
 
 func (s *ProductsService) FindMortgage(ctx context.Context, id string) (*Mortgage, error) {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/ProductsService.FindMortgage")
+	defer span.End()
+
 	req, err := s.c.newRequest("GET", fmt.Sprintf("/v1/mortgages/%s", id), nil)
 
 	if err != nil {
@@ -88,6 +92,9 @@ func (s *ProductsService) FindMortgage(ctx context.Context, id string) (*Mortgag
 }
 
 func (s *ProductsService) UpdateMortgage(ctx context.Context, mortgage *Mortgage) error {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/ProductsService.UpdateMortgage")
+	defer span.End()
+
 	if len(mortgage.ID) == 0 {
 		return errors.New("can only update an existing mortgage")
 	}
@@ -109,6 +116,9 @@ func (s *ProductsService) UpdateMortgage(ctx context.Context, mortgage *Mortgage
 }
 
 func (s *ProductsService) NewMortgage(ctx context.Context, opts *NewMortgageRequest) error {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/ProductsService.NewMortgage")
+	defer span.End()
+
 	rb, _ := json.Marshal(opts)
 	req, err := s.c.newRequest("POST", "/v1/mortgages", bytes.NewReader(rb))
 
@@ -126,6 +136,9 @@ func (s *ProductsService) NewMortgage(ctx context.Context, opts *NewMortgageRequ
 }
 
 func (s *ProductsService) ListMortgages(ctx context.Context, filters *ProductFilters) (*ListMortgagesResponse, error) {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/ProductsService.ListMortgages")
+	defer span.End()
+
 	obj := &ListMortgagesResponse{}
 	qs, _ := querystring.Values(filters)
 

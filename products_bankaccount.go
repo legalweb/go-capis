@@ -9,6 +9,7 @@ import (
 	"time"
 
 	querystring "github.com/google/go-querystring/query"
+	"go.opencensus.io/trace"
 )
 
 type (
@@ -79,6 +80,9 @@ type (
 )
 
 func (s *ProductsService) NewBankAccount(ctx context.Context, opts *NewBankAccountRequest) error {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/ProductsService.NewBankAccount")
+	defer span.End()
+
 	rb, _ := json.Marshal(opts)
 	req, err := s.c.newRequest("POST", "/v1/bankaccounts", bytes.NewReader(rb))
 
@@ -96,6 +100,9 @@ func (s *ProductsService) NewBankAccount(ctx context.Context, opts *NewBankAccou
 }
 
 func (s *ProductsService) FindBankAccount(ctx context.Context, id string) (*BankAccount, error) {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/ProductsService.FinkBankAccount")
+	defer span.End()
+
 	req, err := s.c.newRequest("GET", fmt.Sprintf("/v1/bankaccounts/%s", id), nil)
 
 	if err != nil {
@@ -113,6 +120,9 @@ func (s *ProductsService) FindBankAccount(ctx context.Context, id string) (*Bank
 }
 
 func (s *ProductsService) UpdateBankAccount(ctx context.Context, bankAccount *BankAccount) error {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/ProductsService.UpdateBankAccount")
+	defer span.End()
+
 	if len(bankAccount.ID) == 0 {
 		return errors.New("can only update an existing bank account")
 	}
@@ -134,6 +144,9 @@ func (s *ProductsService) UpdateBankAccount(ctx context.Context, bankAccount *Ba
 }
 
 func (s *ProductsService) ListBankAccounts(ctx context.Context, filters *ProductFilters) (*ListBankAccountsResponse, error) {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/ProductsService.ListBankAccounts")
+	defer span.End()
+
 	obj := &ListBankAccountsResponse{}
 	qs, _ := querystring.Values(filters)
 

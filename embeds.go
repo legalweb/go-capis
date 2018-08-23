@@ -4,6 +4,7 @@ import (
 	"context"
 
 	querystring "github.com/google/go-querystring/query"
+	"go.opencensus.io/trace"
 )
 
 type (
@@ -90,6 +91,9 @@ type (
 
 // ListEmbeds ...
 func (c *Client) ListEmbeds(ctx context.Context, filters *EmbedFilters) (*ListEmbedsResponse, error) {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/Client.ListEmbeds")
+	defer span.End()
+
 	obj := &ListEmbedsResponse{}
 	qs, _ := querystring.Values(filters)
 
@@ -113,6 +117,9 @@ func (c *Client) ListEmbeds(ctx context.Context, filters *EmbedFilters) (*ListEm
 
 // FindEmbed ...
 func (c *Client) FindEmbed(ctx context.Context, id string) (*Embed, error) {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/Client.FindEmbed")
+	defer span.End()
+
 	obj := &Embed{}
 
 	req, err := c.newRequest("GET", "/v1/embeds/"+id, nil)

@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 
 	querystring "github.com/google/go-querystring/query"
+	"go.opencensus.io/trace"
 )
 
 type (
@@ -84,6 +85,9 @@ type NewGroupRequest struct {
 
 // NewGroup ...
 func (c *Client) NewGroup(ctx context.Context, opts *NewGroupRequest) error {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/Client.NewGroup")
+	defer span.End()
+
 	b, err := json.Marshal(opts)
 	if err != nil {
 		return err
@@ -115,6 +119,9 @@ type SetGroupProductsRequest struct {
 
 // SetGroupProducts ...
 func (c *Client) SetGroupProducts(ctx context.Context, opts *SetGroupProductsRequest) error {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/Client.SetGroupProducts")
+	defer span.End()
+
 	b, err := json.Marshal(opts)
 	if err != nil {
 		return err

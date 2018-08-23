@@ -9,6 +9,7 @@ import (
 	"time"
 
 	querystring "github.com/google/go-querystring/query"
+	"go.opencensus.io/trace"
 )
 
 type (
@@ -69,6 +70,9 @@ type (
 )
 
 func (s *ProductsService) FindLoan(ctx context.Context, id string) (*Loan, error) {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/ProductsService.FindLoan")
+	defer span.End()
+
 	req, err := s.c.newRequest("GET", fmt.Sprintf("/v1/loans/%s", id), nil)
 
 	if err != nil {
@@ -86,6 +90,9 @@ func (s *ProductsService) FindLoan(ctx context.Context, id string) (*Loan, error
 }
 
 func (s *ProductsService) UpdateLoan(ctx context.Context, loan *Loan) error {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/ProductsService.UpdateLoan")
+	defer span.End()
+
 	if len(loan.ID) == 0 {
 		return errors.New("can only update an existing loan")
 	}
@@ -107,6 +114,9 @@ func (s *ProductsService) UpdateLoan(ctx context.Context, loan *Loan) error {
 }
 
 func (s *ProductsService) NewLoan(ctx context.Context, opts *NewLoanRequest) error {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/ProductsService.NewLoan")
+	defer span.End()
+
 	rb, _ := json.Marshal(opts)
 	req, err := s.c.newRequest("POST", "/v1/loans", bytes.NewReader(rb))
 
@@ -124,6 +134,9 @@ func (s *ProductsService) NewLoan(ctx context.Context, opts *NewLoanRequest) err
 }
 
 func (s *ProductsService) ListLoans(ctx context.Context, filters *ProductFilters) (*ListLoansResponse, error) {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/ProductsService.ListLoans")
+	defer span.End()
+
 	obj := &ListLoansResponse{}
 	qs, _ := querystring.Values(filters)
 
