@@ -11,3 +11,7 @@ const (
 	// TypeMortgage product type.
 	TypeMortgage ProductType = "mortgage"
 )
+
+func (t ProductType) String() string {
+	return string(t)
+}

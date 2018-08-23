@@ -11,7 +11,7 @@ type (
 	// BuildConfigurationResponse contains options used to build embeds.
 	BuildConfigurationResponse struct {
 		Data []struct {
-			Type    string `json:"type"`
+			Type    ProductType `json:"type"`
 			Columns []struct {
 				Value string `json:"value"`
 				Label string `json:"label"`
