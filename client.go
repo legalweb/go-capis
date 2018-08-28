@@ -27,8 +27,9 @@ type (
 // New will return a client with the options provided.
 func New(opts ...Option) (*Client, error) {
 	c := &Client{
-		httpC: http.DefaultClient,
-		base:  DefaultBaseURL,
+		httpC:    http.DefaultClient,
+		base:     DefaultBaseURL,
+		logError: func(error) {},
 	}
 
 	for _, opt := range opts {
