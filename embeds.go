@@ -85,6 +85,7 @@ type (
 
 	// EmbedFilters ...
 	EmbedFilters struct {
+		ID       []string `json:"embed_ids"`
 		Metadata []string `json:"metadata"`
 	}
 )
