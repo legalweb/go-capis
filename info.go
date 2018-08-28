@@ -38,16 +38,19 @@ func (c *Client) GetBuildConfiguration(ctx context.Context) (*BuildConfiguration
 
 	req, err := c.newRequest("GET", "/v1/info/build-configurations", nil)
 	if err != nil {
+		c.logError(err)
 		return nil, errors.Wrap(err, "unable to create request")
 	}
 
 	res, err := c.Do(req.WithContext(ctx))
 	if err != nil {
+		c.logError(err)
 		return nil, ErrUnreachable
 	}
 	defer res.Body.Close()
 
 	if err := statusCodeToError(res.StatusCode); err != nil {
+		c.logError(err)
 		return nil, err
 	}
 

@@ -100,16 +100,19 @@ func (c *Client) ListEmbeds(ctx context.Context, filters *EmbedFilters) (*ListEm
 
 	req, err := c.newRequest("GET", "/v1/embeds?"+qs.Encode(), nil)
 	if err != nil {
+		c.logError(err)
 		return nil, err
 	}
 
 	res, err := c.Do(req.WithContext(ctx))
 	if err != nil {
+		c.logError(err)
 		return nil, ErrUnreachable
 	}
 	defer res.Body.Close()
 
 	if err := statusCodeToError(res.StatusCode); err != nil {
+		c.logError(err)
 		return nil, err
 	}
 
@@ -125,16 +128,19 @@ func (c *Client) FindEmbed(ctx context.Context, id string) (*Embed, error) {
 
 	req, err := c.newRequest("GET", "/v1/embeds/"+id, nil)
 	if err != nil {
+		c.logError(err)
 		return nil, err
 	}
 
 	res, err := c.Do(req.WithContext(ctx))
 	if err != nil {
+		c.logError(err)
 		return nil, ErrUnreachable
 	}
 	defer res.Body.Close()
 
 	if err := statusCodeToError(res.StatusCode); err != nil {
+		c.logError(err)
 		return nil, err
 	}
 

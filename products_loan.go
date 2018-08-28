@@ -81,6 +81,7 @@ func (s *ProductsService) FindLoan(ctx context.Context, id string) (*Loan, error
 
 	res, err := s.c.Do(req.WithContext(ctx))
 	if err != nil {
+		s.c.logError(err)
 		return nil, ErrUnreachable
 	}
 	defer res.Body.Close()
@@ -147,6 +148,7 @@ func (s *ProductsService) ListLoans(ctx context.Context, filters *ProductFilters
 
 	res, err := s.c.Do(req.WithContext(ctx))
 	if err != nil {
+		s.c.logError(err)
 		return nil, ErrUnreachable
 	}
 	defer res.Body.Close()

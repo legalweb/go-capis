@@ -92,6 +92,7 @@ func (s *ProductsService) NewBankAccount(ctx context.Context, opts *NewBankAccou
 
 	res, err := s.c.Do(req.WithContext(ctx))
 	if err != nil {
+		s.c.logError(err)
 		return ErrUnreachable
 	}
 	defer res.Body.Close()
@@ -111,6 +112,7 @@ func (s *ProductsService) FindBankAccount(ctx context.Context, id string) (*Bank
 
 	res, err := s.c.Do(req.WithContext(ctx))
 	if err != nil {
+		s.c.logError(err)
 		return nil, ErrUnreachable
 	}
 	defer res.Body.Close()
@@ -136,6 +138,7 @@ func (s *ProductsService) UpdateBankAccount(ctx context.Context, bankAccount *Ba
 
 	res, err := s.c.Do(req.WithContext(ctx))
 	if err != nil {
+		s.c.logError(err)
 		return ErrUnreachable
 	}
 	defer res.Body.Close()
@@ -157,6 +160,7 @@ func (s *ProductsService) ListBankAccounts(ctx context.Context, filters *Product
 
 	res, err := s.c.Do(req.WithContext(ctx))
 	if err != nil {
+		s.c.logError(err)
 		return nil, ErrUnreachable
 	}
 	defer res.Body.Close()

@@ -83,6 +83,7 @@ func (s *ProductsService) FindMortgage(ctx context.Context, id string) (*Mortgag
 
 	res, err := s.c.Do(req.WithContext(ctx))
 	if err != nil {
+		s.c.logError(err)
 		return nil, ErrUnreachable
 	}
 	defer res.Body.Close()
@@ -149,6 +150,7 @@ func (s *ProductsService) ListMortgages(ctx context.Context, filters *ProductFil
 
 	res, err := s.c.Do(req.WithContext(ctx))
 	if err != nil {
+		s.c.logError(err)
 		return nil, ErrUnreachable
 	}
 	defer res.Body.Close()

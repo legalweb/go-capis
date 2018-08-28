@@ -39,16 +39,19 @@ func (c *Client) ListGroups(ctx context.Context, filters *GroupFilters) (*ListGr
 
 	req, err := c.newRequest("GET", "/v1/groups?"+qs.Encode(), nil)
 	if err != nil {
+		c.logError(err)
 		return nil, err
 	}
 
 	res, err := c.Do(req.WithContext(ctx))
 	if err != nil {
+		c.logError(err)
 		return nil, ErrUnreachable
 	}
 	defer res.Body.Close()
 
 	if err := statusCodeToError(res.StatusCode); err != nil {
+		c.logError(err)
 		return nil, err
 	}
 
@@ -61,16 +64,19 @@ func (c *Client) FindGroup(ctx context.Context, name string) (*FindGroupResponse
 
 	req, err := c.newRequest("GET", "/v1/groups/"+name, nil)
 	if err != nil {
+		c.logError(err)
 		return nil, err
 	}
 
 	res, err := c.Do(req.WithContext(ctx))
 	if err != nil {
+		c.logError(err)
 		return nil, ErrUnreachable
 	}
 	defer res.Body.Close()
 
 	if err := statusCodeToError(res.StatusCode); err != nil {
+		c.logError(err)
 		return nil, err
 	}
 
@@ -90,21 +96,25 @@ func (c *Client) NewGroup(ctx context.Context, opts *NewGroupRequest) error {
 
 	b, err := json.Marshal(opts)
 	if err != nil {
+		c.logError(err)
 		return err
 	}
 
 	req, err := c.newRequest("POST", "/v1/groups", bytes.NewReader(b))
 	if err != nil {
+		c.logError(err)
 		return err
 	}
 
 	res, err := c.Do(req.WithContext(ctx))
 	if err != nil {
+		c.logError(err)
 		return ErrUnreachable
 	}
 	defer res.Body.Close()
 
 	if err := statusCodeToError(res.StatusCode); err != nil {
+		c.logError(err)
 		return err
 	}
 

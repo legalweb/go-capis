@@ -15,6 +15,7 @@ func (c *Client) Healthy(ctx context.Context) bool {
 	req, err := c.newRequest("GET", "/healthz", nil)
 	res, err := c.Do(req.WithContext(ctx))
 	if err != nil {
+		c.logError(err)
 		return false
 	}
 

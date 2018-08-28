@@ -14,25 +14,61 @@ const (
 type (
 	// Client will talk to comparisonapis.com
 	Client struct {
-		*http.Client
-
-		base  string
-		token string
+		httpC    *http.Client
+		base     string
+		token    string
+		logError func(error)
 	}
+
+	// Option customises the client.
+	Option func(*Client) error
 )
 
-// New will return a client with the default http client.
-func New(base, token string) *Client {
-	return NewWithHTTPClient(base, token, http.DefaultClient)
+// New will return a client with the options provided.
+func New(opts ...Option) (*Client, error) {
+	c := &Client{
+		httpC: http.DefaultClient,
+		base:  DefaultBaseURL,
+	}
+
+	for _, opt := range opts {
+		if err := opt(c); err != nil {
+			return nil, err
+		}
+	}
+
+	return c, nil
 }
 
-// NewWithHTTPClient will return a new comparisonapis.com client using the
-// http client provided.
-func NewWithHTTPClient(base, token string, hc *http.Client) *Client {
-	return &Client{
-		Client: hc,
-		base:   strings.TrimRight(base, "/"),
-		token:  token,
+// WithHTTPClient returns an option to pass to New()
+func WithHTTPClient(hc *http.Client) Option {
+	return func(c *Client) error {
+		c.httpC = hc
+		return nil
+	}
+}
+
+// WithToken returns an option to pass to New()
+func WithToken(tok string) Option {
+	return func(c *Client) error {
+		c.token = tok
+		return nil
+	}
+}
+
+// WithBase returns an option to pass to New()
+func WithBase(base string) Option {
+	return func(c *Client) error {
+		c.base = strings.TrimRight(base, "/")
+		return nil
+	}
+}
+
+// WithErrorLog returns an option to pass to New()
+func WithErrorLog(out func(error)) Option {
+	return func(c *Client) error {
+		c.logError = out
+		return nil
 	}
 }
 
@@ -47,4 +83,9 @@ func (c *Client) newRequest(method, path string, body io.Reader) (*http.Request,
 	}
 
 	return req, nil
+}
+
+// Do forwards the request to be handled by the HTTP client provided.
+func (c *Client) Do(req *http.Request) (*http.Response, error) {
+	return c.httpC.Do(req)
 }
