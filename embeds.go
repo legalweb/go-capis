@@ -74,13 +74,19 @@ type (
 
 	// DetailedEmbed ...
 	DetailedEmbed struct {
-		Embed Embed `json:"embed"`
+		ID         string               `json:"id"`
+		Introducer string               `json:"introducer"`
+		Theme      EmbedTheme           `json:"theme"`
+		Overrides  EmbedOverrides       `json:"overrides"`
+		Filters    []string             `json:"filters"`
+		Columns    []string             `json:"columns"`
+		Source     EmbedProductSelector `json:"source"`
 
 		Details struct {
 			ProductCount int64  `json:"product_count"`
 			ProductType  string `json:"product_type"`
 			Snippet      string `json:"snippet"`
-		}
+		} `json:"details"`
 	}
 
 	// EmbedFilters ...
@@ -127,6 +133,34 @@ func (c *Client) FindEmbed(ctx context.Context, id string) (*Embed, error) {
 	obj := &Embed{}
 
 	req, err := c.newRequest("GET", "/v1/embeds/"+id, nil)
+	if err != nil {
+		c.logError(err)
+		return nil, err
+	}
+
+	res, err := c.Do(req.WithContext(ctx))
+	if err != nil {
+		c.logError(err)
+		return nil, ErrUnreachable
+	}
+	defer res.Body.Close()
+
+	if err := statusCodeToError(res.StatusCode); err != nil {
+		c.logError(err)
+		return nil, err
+	}
+
+	return obj, unmarshalResponse(res, obj)
+}
+
+// FindEmbedDetailed ...
+func (c *Client) FindEmbedDetailed(ctx context.Context, id string) (*DetailedEmbed, error) {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/Client.FindEmbedDetailed")
+	defer span.End()
+
+	obj := &DetailedEmbed{}
+
+	req, err := c.newRequest("GET", "/v1/embeds/"+id+"/detailed", nil)
 	if err != nil {
 		c.logError(err)
 		return nil, err
