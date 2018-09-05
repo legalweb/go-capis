@@ -91,8 +91,8 @@ type (
 
 	// EmbedFilters ...
 	EmbedFilters struct {
-		ID       []string `json:"embed_ids"`
-		Metadata []string `json:"metadata"`
+		ID       []string `json:"embed_ids" url:"embed_ids"`
+		Metadata []string `json:"metadata" url:"metadata"`
 	}
 )
 
