@@ -1,7 +1,9 @@
 package capis
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 
 	querystring "github.com/google/go-querystring/query"
 	"go.opencensus.io/trace"
@@ -32,6 +34,16 @@ type (
 		Filters    []string             `json:"filters"`
 		Columns    []string             `json:"columns"`
 		Source     EmbedProductSelector `json:"source"`
+	}
+
+	// CreateEmbedRequest ...
+	CreateEmbedRequest struct {
+		ID        string               `json:"id"`
+		Theme     EmbedTheme           `json:"theme"`
+		Overrides EmbedOverrides       `json:"overrides"`
+		Filters   []string             `json:"filters"`
+		Columns   []string             `json:"columns"`
+		Source    EmbedProductSelector `json:"source"`
 	}
 
 	// EmbedTheme ...
@@ -179,4 +191,51 @@ func (c *Client) FindEmbedDetailed(ctx context.Context, id string) (*DetailedEmb
 	}
 
 	return obj, unmarshalResponse(res, obj)
+}
+
+// NewCreateEmbedRequestForGroup will return a create embed request with the
+// product source of a group.
+func NewCreateEmbedRequestForGroup(id string, theme EmbedTheme, overrides EmbedOverrides, filters, columns []string, group string) *CreateEmbedRequest {
+	return &CreateEmbedRequest{
+		ID:        id,
+		Theme:     theme,
+		Overrides: overrides,
+		Filters:   filters,
+		Columns:   columns,
+		Source: EmbedProductSelector{
+			GroupID: group,
+		},
+	}
+}
+
+// CreateEmbed ...
+func (c *Client) CreateEmbed(ctx context.Context, embed *CreateEmbedRequest) error {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/Client.CreateEmbed")
+	defer span.End()
+
+	b, err := json.Marshal(embed)
+	if err != nil {
+		c.logError(err)
+		return err
+	}
+
+	req, err := c.newRequest("POST", "/v1/embeds", bytes.NewReader(b))
+	if err != nil {
+		c.logError(err)
+		return err
+	}
+
+	res, err := c.Do(req.WithContext(ctx))
+	if err != nil {
+		c.logError(err)
+		return ErrUnreachable
+	}
+	res.Body.Close()
+
+	if err := statusCodeToError(res.StatusCode); err != nil {
+		c.logError(err)
+		return err
+	}
+
+	return nil
 }
