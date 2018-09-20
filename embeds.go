@@ -38,12 +38,12 @@ type (
 
 	// CreateEmbedRequest ...
 	CreateEmbedRequest struct {
-		ID        string               `json:"id"`
-		Theme     EmbedTheme           `json:"theme"`
-		Overrides EmbedOverrides       `json:"overrides"`
-		Filters   []string             `json:"filters"`
-		Columns   []string             `json:"columns"`
-		Source    EmbedProductSelector `json:"source"`
+		ID        string         `json:"id"`
+		Theme     EmbedTheme     `json:"theme"`
+		Overrides EmbedOverrides `json:"overrides"`
+		Filters   []string       `json:"filters"`
+		Columns   []string       `json:"columns"`
+		Group     string         `json:"group_id"`
 	}
 
 	// EmbedTheme ...
@@ -202,9 +202,7 @@ func NewCreateEmbedRequestForGroup(id string, theme EmbedTheme, overrides EmbedO
 		Overrides: overrides,
 		Filters:   filters,
 		Columns:   columns,
-		Source: EmbedProductSelector{
-			GroupID: group,
-		},
+		Group:     group,
 	}
 }
 
