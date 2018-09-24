@@ -20,6 +20,14 @@ type (
 		Overrides EmbedOverrides `json:"overrides"`
 	}
 
+	// EmbedUpdateRequest ...
+	EmbedUpdateRequest struct {
+		id      string
+		Filters []string   `json:"filters"`
+		Columns []string   `json:"columns"`
+		Theme   EmbedTheme `json:"theme"`
+	}
+
 	// ListEmbedsResponse ...
 	ListEmbedsResponse struct {
 		Data []*Embed `json:"data"`
@@ -218,6 +226,65 @@ func (c *Client) CreateEmbed(ctx context.Context, embed *CreateEmbedRequest) err
 	}
 
 	req, err := c.newRequest("POST", "/v1/embeds", bytes.NewReader(b))
+	if err != nil {
+		c.logError(err)
+		return err
+	}
+
+	res, err := c.Do(req.WithContext(ctx))
+	if err != nil {
+		c.logError(err)
+		return ErrUnreachable
+	}
+	res.Body.Close()
+
+	if err := statusCodeToError(res.StatusCode); err != nil {
+		c.logError(err)
+		return err
+	}
+
+	return nil
+}
+
+func (e *Embed) Update() *EmbedUpdateRequest {
+	return &EmbedUpdateRequest{
+		id:      e.ID,
+		Filters: e.Filters,
+		Columns: e.Columns,
+		Theme:   e.Theme,
+	}
+}
+
+// SetFilters will update the update embed request to make changes to the Filters.
+func (e *EmbedUpdateRequest) SetFilters(in []string) *EmbedUpdateRequest {
+	e.Filters = in
+	return e
+}
+
+// SetColumns will update the update embed request to make changes to the Columns.
+func (e *EmbedUpdateRequest) SetColumns(in []string) *EmbedUpdateRequest {
+	e.Columns = in
+	return e
+}
+
+// SetTheme will update the update embed request to make changes to the Theme.
+func (e *EmbedUpdateRequest) SetTheme(in EmbedTheme) *EmbedUpdateRequest {
+	e.Theme = in
+	return e
+}
+
+// UpdateEmbed will send the request to update the embed.
+func (c *Client) UpdateEmbed(ctx context.Context, euq *EmbedUpdateRequest) error {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/Client.UpdateEmbed")
+	defer span.End()
+
+	b, err := json.Marshal(euq)
+	if err != nil {
+		c.logError(err)
+		return err
+	}
+
+	req, err := c.newRequest("PUT", "/v1/embeds/"+euq.id, bytes.NewReader(b))
 	if err != nil {
 		c.logError(err)
 		return err
