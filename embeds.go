@@ -106,6 +106,7 @@ type (
 			ProductCount int64  `json:"product_count"`
 			ProductType  string `json:"product_type"`
 			Snippet      string `json:"snippet"`
+			Endpoint     string `json:"endpoint"`
 		} `json:"details"`
 	}
 
