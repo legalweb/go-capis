@@ -11,13 +11,19 @@ import (
 type (
 	// ListIssuersResponse ...
 	ListIssuersResponse struct {
-		Data []*Issuer `json:"data"`
+		Data []*IssuerSummary `json:"data"`
+	}
+
+	// IssuerSummary ...
+	IssuerSummary struct {
+		ID    string `json:"id"`
+		Label string `json:"label"`
 	}
 
 	// Issuer ...
 	Issuer struct {
-		ID   string `json:"id"`
-		Type string `json:"type"`
+		ID    string `json:"id"`
+		Label string `json:"label"`
 	}
 )
 
@@ -29,6 +35,34 @@ func (c *Client) ListIssuers(ctx context.Context) (*ListIssuersResponse, error) 
 	obj := &ListIssuersResponse{}
 
 	req, err := c.newRequest("GET", "/v1/issuers", nil)
+	if err != nil {
+		c.logError(err)
+		return nil, err
+	}
+
+	res, err := c.Do(req.WithContext(ctx))
+	if err != nil {
+		c.logError(err)
+		return nil, ErrUnreachable
+	}
+	defer res.Body.Close()
+
+	if err := statusCodeToError(res.StatusCode); err != nil {
+		c.logError(err)
+		return nil, err
+	}
+
+	return obj, unmarshalResponse(res, obj)
+}
+
+// FindIssuer ...
+func (c *Client) FindIssuer(ctx context.Context, id string) (*Issuer, error) {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/Client.FindIssuer")
+	defer span.End()
+
+	obj := &Issuer{}
+
+	req, err := c.newRequest("GET", "/v1/issuers/"+id, nil)
 	if err != nil {
 		c.logError(err)
 		return nil, err
