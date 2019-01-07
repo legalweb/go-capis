@@ -16,13 +16,13 @@ type (
 
 	// IssuerSummary ...
 	IssuerSummary struct {
-		ID    string `json:"id"`
+		ID    string `json:"issuer_id"`
 		Label string `json:"label"`
 	}
 
 	// Issuer ...
 	Issuer struct {
-		ID    string `json:"id"`
+		ID    string `json:"issuer_id"`
 		Label string `json:"label"`
 	}
 )
