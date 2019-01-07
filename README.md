@@ -1,6 +1,6 @@
 # Comparison APIs Golang Client
 
-Supports affiliates (products) and introducers (embeds).
+Supports affiliates (products), introducers (embeds) and issuers.
 
 ## Usage
 
