@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 
+	querystring "github.com/google/go-querystring/query"
 	"go.opencensus.io/trace"
 )
 
@@ -12,6 +13,10 @@ type (
 	// ListIssuersResponse ...
 	ListIssuersResponse struct {
 		Data []*IssuerSummary `json:"data"`
+	}
+
+	IssuerFilters struct {
+		Label string `json:"label"`
 	}
 
 	// IssuerSummary ...
@@ -28,13 +33,17 @@ type (
 )
 
 // ListIssuers ...
-func (c *Client) ListIssuers(ctx context.Context) (*ListIssuersResponse, error) {
+func (c *Client) ListIssuers(ctx context.Context, filters *IssuerFilters, start, limit int64) (*ListIssuersResponse, error) {
 	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/Client.ListIssuers")
 	defer span.End()
 
+	qs, _ := querystring.Values(filters)
+	qs.Set("start", start)
+	qs.Set("limit", limit)
+
 	obj := &ListIssuersResponse{}
 
-	req, err := c.newRequest("GET", "/v1/issuers", nil)
+	req, err := c.newRequest("GET", "/v1/issuers?"+qs.Encode(), nil)
 	if err != nil {
 		c.logError(err)
 		return nil, err
