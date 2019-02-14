@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"strconv"
 
 	querystring "github.com/google/go-querystring/query"
 	"go.opencensus.io/trace"
@@ -33,13 +34,13 @@ type (
 )
 
 // ListIssuers ...
-func (c *Client) ListIssuers(ctx context.Context, filters *IssuerFilters, start, limit int64) (*ListIssuersResponse, error) {
+func (c *Client) ListIssuers(ctx context.Context, filters *IssuerFilters, start, limit int) (*ListIssuersResponse, error) {
 	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/Client.ListIssuers")
 	defer span.End()
 
 	qs, _ := querystring.Values(filters)
-	qs.Set("start", start)
-	qs.Set("limit", limit)
+	qs.Set("start", strconv.Itoa(start))
+	qs.Set("limit", strconv.Itoa(limit))
 
 	obj := &ListIssuersResponse{}
 
