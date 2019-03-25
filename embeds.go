@@ -56,27 +56,19 @@ type (
 
 	// EmbedTheme ...
 	EmbedTheme struct {
-		MainColor                         string `json:"mainColor"`
-		MainFontFamily                    string `json:"mainFontFamily"`
-		MainNormalFontWeight              string `json:"mainNormalFontWeight"`
-		MainFontSize                      string `json:"mainFontSize"`
-		MainBoldFontWeight                string `json:"mainBoldFontWeight"`
-		ProductMaskBackground             string `json:"productMaskBackground"`
-		ProductEmptyBackground            string `json:"productEmptyBackground"`
-		ProductOutlineBackground          string `json:"productOutlineBackground"`
-		ProductOutlineColor               string `json:"productOutlineColor"`
-		ProductColBackground              string `json:"productColBackground"`
-		ProductHighlightOutlineBackground string `json:"productHighlightOutlineBackground"`
-		ProductHighlightOutlineColor      string `json:"productHighlightOutlineColor"`
-		ApplyButtonBackground             string `json:"applyButtonBackground"`
-		ApplyButtonColor                  string `json:"applyButtonColor"`
-		InfoButtonBackground              string `json:"infoButtonBackground"`
-		InfoButtonColor                   string `json:"infoButtonColor"`
-		InfoCheckColor                    string `json:"infoCheckColor"`
-		FilterHeaderBorder                string `json:"filterHeaderBorder"`
-		FilterHeaderColor                 string `json:"filterHeaderColor"`
-		FilterChosenBackground            string `json:"filterChosenBackground"`
-		FilterChosenColor                 string `json:"filterChosenColor"`
+		ProductBorder              string `json:"productBorder"`
+		ProductMaskBackground      string `json:"productMaskBackground"`
+		ProductEmptyBackground     string `json:"productEmptyBackground"`
+		ProductHighlightColor      string `json:"productHighlightColor"`
+		ProductFeaturedIconColor   string `json:"productFeaturedIconColor"`
+		ApplyButtonBackground      string `json:"applyButtonBackground"`
+		ApplyButtonColor           string `json:"applyButtonColor"`
+		InfoButtonBackground       string `json:"infoButtonBackground"`
+		InfoButtonColor            string `json:"infoButtonColor"`
+		FilterHeaderBackground     string `json:"filterHeaderBackground"`
+		FilterHeaderColor          string `json:"filterHeaderColor"`
+		FilterChipChosenColor      string `json:"filterChipChosenColor"`
+		FilterChipChosenBackground string `json:"filterChipChosenBackground"`
 	}
 
 	// EmbedOverrides ...
