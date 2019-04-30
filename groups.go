@@ -17,7 +17,7 @@ type (
 
 	// FindGroupResponse ...
 	FindGroupResponse struct {
-		Data *Group `json:"data"`
+		Data *DetailedGroup `json:"data"`
 	}
 
 	// GroupFilters ...
@@ -29,6 +29,13 @@ type (
 	Group struct {
 		ID   string `json:"id"`
 		Type string `json:"type"`
+	}
+
+	// DetailedGroup ...
+	DetailedGroup struct {
+		ID       string   `json:"id"`
+		Type     string   `json:"type"`
+		Products []string `json:"product_ids"`
 	}
 )
 
