@@ -297,3 +297,33 @@ func (c *Client) UpdateEmbed(ctx context.Context, euq *EmbedUpdateRequest) error
 
 	return nil
 }
+
+// UpdateEmbedApplyURL will send the request to update the embed.
+func (c *Client) UpdateEmbedApplyURL(ctx context.Context, emb *Embed, newApplyURL string) error {
+	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/Client.UpdateEmbedApplyURL")
+	defer span.End()
+
+	b, _ := json.Marshal(map[string]string{
+		"new_apply_url": newApplyURL
+	})
+
+	req, err := c.newRequest("POST", "/v1/embeds/"+euq.id+"/update_apply_url", bytes.NewReader(b))
+	if err != nil {
+		c.logError(err)
+		return err
+	}
+
+	res, err := c.Do(req.WithContext(ctx))
+	if err != nil {
+		c.logError(err)
+		return ErrUnreachable
+	}
+	res.Body.Close()
+
+	if err := statusCodeToError(res.StatusCode); err != nil {
+		c.logError(err)
+		return err
+	}
+
+	return nil
+}
