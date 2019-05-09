@@ -307,7 +307,7 @@ func (c *Client) UpdateEmbedApplyURL(ctx context.Context, emb *Embed, newApplyUR
 		"new_apply_url": newApplyURL,
 	})
 
-	req, err := c.newRequest("POST", "/v1/embeds/"+euq.id+"/update_apply_url", bytes.NewReader(b))
+	req, err := c.newRequest("POST", "/v1/embeds/"+emb.ID+"/update_apply_url", bytes.NewReader(b))
 	if err != nil {
 		c.logError(err)
 		return err
