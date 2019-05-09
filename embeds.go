@@ -304,7 +304,7 @@ func (c *Client) UpdateEmbedApplyURL(ctx context.Context, emb *Embed, newApplyUR
 	defer span.End()
 
 	b, _ := json.Marshal(map[string]string{
-		"new_apply_url": newApplyURL
+		"new_apply_url": newApplyURL,
 	})
 
 	req, err := c.newRequest("POST", "/v1/embeds/"+euq.id+"/update_apply_url", bytes.NewReader(b))
