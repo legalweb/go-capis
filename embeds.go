@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"strconv"
 
 	querystring "github.com/google/go-querystring/query"
 	"go.opencensus.io/trace"
@@ -28,9 +29,17 @@ type (
 		Theme   EmbedTheme `json:"theme"`
 	}
 
+	// ListEmbedsResponsePagination ...
+	ListEmbedsResponsePagination struct {
+		Total  int64 `json:"total"`
+		Offset int64 `json:"offset"`
+		Limit  int64 `json:"limit"`
+	}
+
 	// ListEmbedsResponse ...
 	ListEmbedsResponse struct {
-		Data []*Embed `json:"data"`
+		Data       []*Embed                     `json:"data"`
+		Pagination ListEmbedsResponsePagination `json:"pagination"`
 	}
 
 	// Embed ...
@@ -110,12 +119,14 @@ type (
 )
 
 // ListEmbeds ...
-func (c *Client) ListEmbeds(ctx context.Context, filters *EmbedFilters) (*ListEmbedsResponse, error) {
+func (c *Client) ListEmbeds(ctx context.Context, offset, limit int64, filters *EmbedFilters) (*ListEmbedsResponse, error) {
 	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/Client.ListEmbeds")
 	defer span.End()
 
 	obj := &ListEmbedsResponse{}
 	qs, _ := querystring.Values(filters)
+	qs.Set("offset", strconv.Itoa(offset))
+	qs.Set("limit", strconv.Itoa(limit))
 
 	req, err := c.newRequest("GET", "/v1/embeds?"+qs.Encode(), nil)
 	if err != nil {
