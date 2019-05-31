@@ -125,8 +125,8 @@ func (c *Client) ListEmbeds(ctx context.Context, offset, limit int64, filters *E
 
 	obj := &ListEmbedsResponse{}
 	qs, _ := querystring.Values(filters)
-	qs.Set("offset", strconv.Itoa(offset))
-	qs.Set("limit", strconv.Itoa(limit))
+	qs.Set("offset", strconv.FormatInt(offset, 10))
+	qs.Set("limit", strconv.FormatInt(limit, 10))
 
 	req, err := c.newRequest("GET", "/v1/embeds?"+qs.Encode(), nil)
 	if err != nil {
