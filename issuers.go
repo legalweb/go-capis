@@ -36,7 +36,7 @@ type (
 	}
 
 	// NewIssuerRequest ...
-	type NewIssuerRequest struct {
+	NewIssuerRequest struct {
 		ID    string `json:"issuer_id"`
 		Label string `json:"label"`
 	}
