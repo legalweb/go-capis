@@ -34,6 +34,12 @@ type (
 		Logo        string `json:"logo"`
 		Description string `json:"description"`
 	}
+
+	// NewIssuerRequest ...
+	type NewIssuerRequest struct {
+		ID    string `json:"issuer_id"`
+		Label string `json:"label"`
+	}
 )
 
 // ListIssuers ...
@@ -94,12 +100,6 @@ func (c *Client) FindIssuer(ctx context.Context, id string) (*Issuer, error) {
 	}
 
 	return obj, unmarshalResponse(res, obj)
-}
-
-// NewIssuerRequest ...
-type NewIssuerRequest struct {
-	ID    string `json:"id"`
-	Label string `json:"label"`
 }
 
 // NewIssuer ...
