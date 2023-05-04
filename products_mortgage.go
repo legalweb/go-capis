@@ -31,6 +31,8 @@ type (
 		Fee                      Money                  `json:"fee"`
 		MinimumLoan              Money                  `json:"minimum_loan"`
 		MaximumLoan              Money                  `json:"maximum_loan"`
+		MinimumTerm              Months                 `json:"minimum_term"`
+		MaximumTerm              Months                 `json:"maximum_term"`
 		EarlyRedemptionCharge    Money                  `json:"early_redemption_charge"`
 		IsConsumer               bool                   `json:"is_consumer"`
 		IsCommercial             bool                   `json:"is_commercial"`
@@ -57,6 +59,8 @@ type (
 		Fee                      Money                  `json:"fee"`
 		MinimumLoan              Money                  `json:"minimum_loan"`
 		MaximumLoan              Money                  `json:"maximum_loan"`
+		MinimumTerm              Months                 `json:"minimum_term"`
+		MaximumTerm              Months                 `json:"maximum_term"`
 		EarlyRedemptionCharge    Money                  `json:"early_redemption_charge"`
 		IsConsumer               bool                   `json:"is_consumer"`
 		IsCommercial             bool                   `json:"is_commercial"`
