@@ -28,12 +28,12 @@ type (
 		StandardInterestRate     Rate                   `json:"standard_interest_rate"`
 		StandardInterestRateType string                 `json:"standard_interest_rate_type"`
 		LoanToValue              Rate                   `json:"loan_to_value"`
-		Fee                      Money                  `json:"fee"`
+		Fee                      Fee                    `json:"fee"`
 		MinimumLoan              Money                  `json:"minimum_loan"`
 		MaximumLoan              Money                  `json:"maximum_loan"`
 		MinimumTerm              Months                 `json:"minimum_term"`
 		MaximumTerm              Months                 `json:"maximum_term"`
-		EarlyRedemptionCharge    Money                  `json:"early_redemption_charge"`
+		EarlyRedemptionCharge    Fee                    `json:"early_redemption_charge"`
 		IsConsumer               bool                   `json:"is_consumer"`
 		IsCommercial             bool                   `json:"is_commercial"`
 		BrokerOnly               bool                   `json:"broker_only"`
