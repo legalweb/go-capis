@@ -56,12 +56,12 @@ type (
 		StandardInterestRate     Rate                   `json:"standard_interest_rate"`
 		StandardInterestRateType string                 `json:"standard_interest_rate_type"`
 		LoanToValue              Rate                   `json:"loan_to_value"`
-		Fee                      Money                  `json:"fee"`
+		Fee                      Fee                    `json:"fee"`
 		MinimumLoan              Money                  `json:"minimum_loan"`
 		MaximumLoan              Money                  `json:"maximum_loan"`
 		MinimumTerm              Months                 `json:"minimum_term"`
 		MaximumTerm              Months                 `json:"maximum_term"`
-		EarlyRedemptionCharge    Money                  `json:"early_redemption_charge"`
+		EarlyRedemptionCharge    Fee                    `json:"early_redemption_charge"`
 		IsConsumer               bool                   `json:"is_consumer"`
 		IsCommercial             bool                   `json:"is_commercial"`
 		BrokerOnly               bool                   `json:"broker_only"`
@@ -79,7 +79,7 @@ func (s *ProductsService) FindMortgage(ctx context.Context, id string) (*Mortgag
 	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/ProductsService.FindMortgage")
 	defer span.End()
 
-	req, err := s.c.newRequest("GET", fmt.Sprintf("/v1/mortgages/%s", id), nil)
+	req, err := s.c.newRequest("GET", fmt.Sprintf("/v2/mortgages/%s", id), nil)
 
 	if err != nil {
 		return nil, err
@@ -105,7 +105,7 @@ func (s *ProductsService) UpdateMortgage(ctx context.Context, mortgage *Mortgage
 	}
 
 	rb, _ := json.Marshal(mortgage)
-	req, err := s.c.newRequest("PUT", fmt.Sprintf("/v1/mortgages/%s", mortgage.ID), bytes.NewReader(rb))
+	req, err := s.c.newRequest("PUT", fmt.Sprintf("/v2/mortgages/%s", mortgage.ID), bytes.NewReader(rb))
 
 	if err != nil {
 		return err
@@ -125,7 +125,7 @@ func (s *ProductsService) NewMortgage(ctx context.Context, opts *NewMortgageRequ
 	defer span.End()
 
 	rb, _ := json.Marshal(opts)
-	req, err := s.c.newRequest("POST", "/v1/mortgages", bytes.NewReader(rb))
+	req, err := s.c.newRequest("POST", "/v2/mortgages", bytes.NewReader(rb))
 
 	if err != nil {
 		return err
@@ -147,7 +147,7 @@ func (s *ProductsService) ListMortgages(ctx context.Context, filters *ProductFil
 	obj := &ListMortgagesResponse{}
 	qs, _ := querystring.Values(filters)
 
-	req, err := s.c.newRequest("GET", "/v1/mortgages?"+qs.Encode(), nil)
+	req, err := s.c.newRequest("GET", "/v2/mortgages?"+qs.Encode(), nil)
 	if err != nil {
 		return nil, err
 	}
