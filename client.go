@@ -1,9 +1,12 @@
 package capis
 
 import (
+	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
+	"time"
 )
 
 const (
@@ -12,11 +15,15 @@ const (
 )
 
 type (
+	AuthProvider interface {
+		AuthorizeRequest(context.Context, *http.Request) error
+	}
+
 	// Client will talk to comparisonapis.com
 	Client struct {
 		httpC             *http.Client
 		base              string
-		token             string
+		authProvider      AuthProvider
 		logError          func(error)
 		requestMiddleware RequestMiddleware
 	}
@@ -51,10 +58,10 @@ func WithHTTPClient(hc *http.Client) Option {
 	}
 }
 
-// WithToken returns an option to pass to New()
-func WithToken(tok string) Option {
+// WithAuthProvider returns an option to pass to New()
+func WithAuthProvider(ap AuthProvider) Option {
 	return func(c *Client) error {
-		c.token = tok
+		c.authProvider = ap
 		return nil
 	}
 }
@@ -84,13 +91,17 @@ func WithRequestMiddleware(m RequestMiddlewareFunc) Option {
 }
 
 func (c *Client) newRequest(method, path string, body io.Reader) (*http.Request, error) {
+	// @todo pass context to this method :)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
 	req, err := http.NewRequest(method, c.base+path, body)
 	if err != nil {
 		return nil, err
 	}
 
-	if c.token != "" {
-		req.Header.Add("Authorization", "Bearer "+c.token)
+	if err := c.authProvider.AuthorizeRequest(ctx, req); err != nil {
+		return nil, fmt.Errorf("authorization error %w", err)
 	}
 
 	return req, nil
