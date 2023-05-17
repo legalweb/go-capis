@@ -140,7 +140,11 @@ func (s *ProductsService) NewMortgage(ctx context.Context, opts *NewMortgageRequ
 	return statusCodeToError(res.StatusCode)
 }
 
-func (s *ProductsService) ListMortgages(ctx context.Context, filters *ProductFilters) (*ListMortgagesResponse, error) {
+type MortgageProductFilters struct {
+	ID []string `url:"id,comma"`
+}
+
+func (s *ProductsService) ListMortgages(ctx context.Context, filters *MortgageProductFilters) (*ListMortgagesResponse, error) {
 	ctx, span := trace.StartSpan(ctx, "lwebco.de/go-capis/ProductsService.ListMortgages")
 	defer span.End()
 
