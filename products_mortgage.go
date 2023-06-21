@@ -22,6 +22,7 @@ type (
 		URLLogo                  string                 `json:"url_logo"`
 		HighlightedPoints        []string               `json:"highlighted_points"`
 		TechnicalPoints          []string               `json:"technical_points"`
+		Labels                   []string               `json:"labels"`
 		Type                     string                 `json:"type"`
 		OfferInterestRate        RatePeriod             `json:"offer_interest_rate"`
 		OfferInterestRateType    string                 `json:"offer_interest_rate_type"`
@@ -50,6 +51,7 @@ type (
 		URLLogo                  string                 `json:"url_logo"`
 		HighlightedPoints        []string               `json:"highlighted_points"`
 		TechnicalPoints          []string               `json:"technical_points"`
+		Labels                   []string               `json:"labels"`
 		Type                     string                 `json:"type"`
 		OfferInterestRate        RatePeriod             `json:"offer_interest_rate"`
 		OfferInterestRateType    string                 `json:"offer_interest_rate_type"`
